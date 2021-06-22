@@ -1,5 +1,5 @@
 # Sorting
-> Great resource for sorting: 
+> Great resources for sorting: 
 - https://github.com/diptangsu/Sorting-Algorithms
 - https://algorithm.yuanbin.me/zh-tw/basics_sorting/
 
