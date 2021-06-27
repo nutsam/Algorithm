@@ -1,74 +1,60 @@
 #include <iostream>
-#include <vector>
 
-void swap(int &p1, int &p2){
-    int temp = p1;
-    p1 = p2;
-    p2 = temp;
+void swap(int arr[], int i, int j){
+	int temp = arr[i];
+	arr[i] = arr[j];
+	arr[j] = temp;
 }
 
-void MaxHeapify(std::vector<int> &array, int root, int length){
 
-    int left = 2*root,      // 取得left child
-    right = 2*root + 1,     // 取得right child
-    largest;                // largest用來記錄包含root與child, 三者之中Key最大的node
+void heapify(int tree[], int n, int i)
+{
+	if (i >= n) {
+		return;
+	}
+	
+    int max = i;
+    int c1 = 2 * i + 1;
+    int c2 = 2 * i + 2;
 
-    if (left <= length && array[left] > array[root])
-        largest = left;
-    else
-        largest = root;
-
-    if (right <= length && array[right] > array[largest])
-        largest = right;
-
-    if (largest != root) {                         // 如果目前root的Key不是三者中的最大
-        swap(array[largest], array[root]);         // 就調換root與三者中Key最大的node之位置
-        MaxHeapify(array, largest, length);        // 調整新的subtree成Max Heap
+    if (c1 < n && tree[max] < tree[c1]){
+    	max = c1;
+    }
+    if (c2 < n && tree[max] < tree[c2]){
+    	max = c2;
+    }
+    if ( i != max){
+    	swap(tree, i, max);
+    	heapify(tree, n, max);
     }
 }
 
-void BuildMaxHeap(std::vector<int> &array){
-
-    for (int i = (int)array.size()/2; i >= 1 ; i--) {
-        MaxHeapify(array, i, (int)array.size() - 1);     // length要減一, 因為heap從1開始存放資料
-    }
+void build_heap(int tree[], int n){
+	int last_node = n - 1;
+	int parent = (last_node - 1) / 2;
+	for(int i = parent; i >= 0; --i){
+		heapify(tree, n, i);
+	}
 }
 
-void HeapSort(std::vector<int> &array){
-
-    array.insert(array.begin(), 0);                     // 將index(0)閒置
-
-    BuildMaxHeap(array);                                // 將array調整成Max Heap
-
-    int size = (int)array.size() -1;                    // size用來記錄「目前要處理的矩陣」之長度
-    for (int i = (int)array.size() -1; i >= 2; i--) {
-        swap(array[1], array[i]);                       // 將最大值放到array的最後一個位置
-        size--;
-        MaxHeapify(array, 1, size);                     // 調整「忽略最後一個位置」的矩陣
-    }
-
-    array.erase(array.begin());                         // 將index(0)刪除
+void heap_sort(int tree[], int n){
+	build_heap(tree, n);
+	int i;
+	for(i = n - 1; n >= 0; i--){
+		swap(tree, i, 0);
+		heapify(tree, i, 0);
+	}
 }
 
-void PrintArray(std::vector<int> &array){
-    for (int i = 0; i < array.size(); i++) {
-        std::cout << array[i] << " ";
-    }
-    std::cout << std::endl;
-}
+int main(){
+	int size = 6;
+	int arr[] = {2, 5, 3, 1, 10, 4};
 
-int main() {
+	heap_sort(arr, size);
+	// heapify(tree, size , 0);	
 
-    int arr = {9, 4, 1, 6, 7, 3, 8, 2, 5};
-    std::vector<int> array(arr, arr+sizeof(arr)/sizeof(int));
-
-    std::cout << "original:\n";
-    PrintArray(array);
-
-    HeapSort(array);
-
-    std::cout << "sorted:\n";
-    PrintArray(array);
-
-    return 0;
+	int i;
+	for(i = 0; i < size; ++i ){
+		printf("%d\n", arr[i]);
+	}
 }
